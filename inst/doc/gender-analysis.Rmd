@@ -1,72 +1,134 @@
 ---
-title: "Introduction to genderstat"
+title: "Using the genderstat Package for Gender Inequality Analysis"
 author: "S M Mashrur Arafin Ayon"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction to genderstat}
+  %\VignetteIndexEntry{Using the genderstat Package for Gender Inequality Analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
+# Introduction
 
-## Introduction
+The `genderstat` package provides tools for quantitative analysis in gender studies, allowing researchers to calculate various gender inequality metrics such as the Gender Pay Gap (GPG), Gender Inequality Index (GII), Gender Development Index (GDI), and Gender Empowerment Measure (GEM). This vignette will guide you through the installation, data description, and usage of the functions included in the package.
 
-The `genderstat` package provides tools for quantitative analysis in gender studies. This includes computation of various gender inequality metrics and visualization tools.
+# Installation
 
+You can install the `genderstat` package from CRAN using the following command:
+
+```r
+install.packages("genderstat")
+```
+# Data Description
+The package includes several datasets used for calculating gender inequality metrics. Below are the descriptions of each dataset:
+
+## Gender Pay Gap (GPG)
+This dataset contains observed values for analyzing the gender pay gap across different countries.
+
+```r
+data(real_data_GPG)
+head(real_data_GPG)
+```
+## Gender Inequality Index (GII)
+This dataset includes metrics for evaluating gender disparities in reproductive health, empowerment, and labor market participation.
+
+```r
+data(real_data_GII)
+head(real_data_GII)
+```
 
 ## Gender Development Index (GDI)
+This dataset contains values for the Gender Development Index, focusing on health, education, and economic resources.
 
-The Gender Development Index (GDI) measures gender inequalities across three basic dimensions: health, knowledge, and living standards. 
-
-```{r}
-# Load the required data
-library(genderstat)
+```r
 data(real_data_GDI)
+head(real_data_GDI)
+```
 
-# Compute the GDI
+## Gender Empowerment Measure (GEM)
+This dataset includes metrics for the Gender Empowerment Measure, assessing political representation, professional positions, and income distribution.
+
+```r
+data(real_data_GEM)
+head(real_data_GEM)
+```
+
+# Function Descriptions and Examples
+## Gender Pay Gap (GPG)
+
+The `gender_pay_gap` function calculates the Gender Pay Gap based on the provided dataset.
+
+```r
+data(real_data_GPG)
+gpg_results <- gender_pay_gap(real_data_GPG)
+print(gpg_results)
+```
+
+## Gender Inequality Index (GII)
+The `gender_inequality_index` function computes the Gender Inequality Index.
+
+```r
+data(real_data_GII)
+gii_results <- gender_inequality_index(real_data_GII)
+print(gii_results)
+```
+
+## Gender Development Index (GDI)
+The `gender_development_index` function calculates the Gender Development Index.
+
+```r
+data(real_data_GDI)
 gdi_results <- gender_development_index(real_data_GDI)
 print(gdi_results)
 ```
 
+## Gender Empowerment Measure (GEM)
+The `gender_empowerment_measure` function computes the Gender Empowerment Measure.
 
+```r
+data(real_data_GEM)
+gem_results <- gender_empowerment_measure(real_data_GEM)
+print(gem_results)
+```
 
-## Visualizing Gender Development Index (GDI) and Human Development Index (HDI)
+# Case Studies
+## Case Study 1: Analyzing Gender Pay Gap
+In this case study, we analyze the gender pay gap across different countries using the `genderstat` package.
 
-To gain insights into the gender inequalities across nations, we can visualize the Gender Development Index (GDI) and Human Development Index (HDI) for the bottom 15 countries.
+```r
+data(real_data_GPG)
+gpg_results <- gender_pay_gap(real_data_GPG)
+# Select top 5 countries with the highest Gender Pay Gap
+top_5_gpg <- gpg_results[order(-gpg_results$gpg), ][1:5, ]
 
-```{r fig.width=10, fig.height=6}
-# Load necessary libraries
-library(genderstat)
+# Visualize the results
 library(ggplot2)
-library(dplyr)
-library(reshape2)
-
-# Load the example dataset
-data(real_data_GDI)
-
-# Plot Gender Development Index (GDI) for Bottom 15 Countries
-gdi_plot <- plot_gdi(real_data_GDI)
-print(gdi_plot)
-
-# Plot Human Development Index (HDI) for Bottom 15 Countries by Gender
-hdi_plot <- plot_hdi(real_data_GDI)
-print(hdi_plot)
+ggplot(top_5_gpg, aes(x = reorder(country, gpg), y = gpg)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  labs(title = "Top 5 Countries with Highest Gender Pay Gap", x = "Country", y = "GPG (%)")
 ```
 
-## Visualizing Gender Inequality Index (GII)
+## Case Study 2: Evaluating Gender Inequality Index
+This case study evaluates the Gender Inequality Index for various countries.
 
-### Bottom 15 Countries by Gender Inequality Index (GII)
-
-The Gender Inequality Index (GII) is a composite measure reflecting inequality in achievements between women and men in three dimensions: reproductive health, empowerment, and the labor market. Here, we visualize the countries that are the worst performers according to the GII, highlighting the areas where gender inequality is most pronounced.
-
-```{r, fig.width=10, fig.height=6}
-# Load the required dataset
+```r
 data(real_data_GII)
+gii_results <- gender_inequality_index(real_data_GII)
+# Select bottom 5 countries with the lowest Gender Inequality Index
+bottom_5_gii <- gii_results[order(gii_results$GII), ][1:5, ]
 
-# Plot Gender Inequality Index (GII) for Bottom 15 Countries
-gii_plot <- plot_gii(real_data_GII)
-print(gii_plot)
+# Visualize the results
+ggplot(bottom_5_gii, aes(x = reorder(country, GII), y = GII)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  labs(title = "Bottom 5 Countries with Lowest Gender Inequality Index", x = "Country", y = "GII")
+
 ```
+
+# Conclusion
+The genderstat package provides a comprehensive set of tools for analyzing gender inequality metrics, making it easier for researchers to conduct gender-centric studies. By leveraging these tools, researchers can gain deeper insights into gender disparities and contribute to informed policy-making and advocacy efforts.
+
 
 
